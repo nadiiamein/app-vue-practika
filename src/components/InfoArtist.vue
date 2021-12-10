@@ -5,7 +5,7 @@
                         <div class="info-artist__tags">
                                     <div class="info-artist__tag"
                                     v-vor="tag in tags"
-                                    :key="tags">
+                                    :key="tag">
                                     {{tag}}
 
                                     </div>

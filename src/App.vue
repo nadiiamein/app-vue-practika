@@ -3,7 +3,8 @@
     <div class="main-layout__wrap">
 <headerOne text="Musik suchen"></headerOne>
   <form-search @form-submit="onSearchFormSubmit"></form-search>
-
+  <info-artist v-if="isArtistInfo" v-bind="InfoArtist"></info-artist>
+<similar-artist v-if="isSimilarArtist" :artists="SimilarArtist"></similar-artist>
     </div>
   </div>
 </template>
@@ -11,17 +12,42 @@
 <script>
 import HeaderOne from './components/HeaderOne.vue';
 import FormSearch from './components/FormSearch.vue';
+import InfoArtist from './components/InfoArtist.vue';
+import SimilarArtist from './components/SimilarArtist.vue';
+
+
+
 
 
 export default {
+
     components: {
         HeaderOne,
-        FormSearch
+        FormSearch,
+        InfoArtist,
+        SimilarArtist,
     },
-    methods: {
-  onSearchFormSubmit(artist){
 
-  }
+data() {
+return {
+  InfoArtist: {},
+  SimilarArtist: []
+};
+  },
+  computed: {
+    isArtistInfo() {
+      return Object.keys(this.InfoArtist).length > 0;
+    },
+    isSimilarArtist() {
+      return this.SimilarArtist.length > 0;
+    }
+  },
+
+    methods: {
+ async onSearchFormSubmit(artist){
+const data = await this.$lastfmService.getArtistInfo(artist);
+consolr.log(data);
+  },
 }
 }
 
