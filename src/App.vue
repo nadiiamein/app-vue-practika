@@ -45,8 +45,8 @@ return {
 
     methods: {
  async onSearchFormSubmit(artist){
-const data = await this.$lastfmService.getArtistInfo(artist);
-consolr.log(data);
+const data = await this.$lastfmService.getSimilarArtists(artist);
+console.log(data);
   },
 }
 }

@@ -3,7 +3,7 @@
         <div class="similar-artists__title"></div>
 
         <div class="similar-artists__list">
-            <div class="similar-artists__item" v-for="artist in ertists" :key="artist.name">
+            <div class="similar-artists__item" v-for="artist in artists" :key="artist.name">
                 <a  class="similar-artists__name" :href="artist.url" target="_blank">{{artist.name}}</a>
                 <div class="similar-artists__name">Math: {{artist.math}}</div>
             </div>

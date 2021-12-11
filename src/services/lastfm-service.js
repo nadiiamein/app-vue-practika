@@ -29,22 +29,52 @@ export default {
     return this._transformArtistInfo(data.artist);
   },
 
-  _transformArtistInfo(artist) {
-      return {
-          name: artist.name,
-          summary: artist.bio.summary,
-          tags: this._trasformTags(artist.tags.tag)
-      };
+  //schen anlische artists
 
+  async getSimilarArtists(artist) {
+    const params = {
+      artist,
+      method: "artist.getSimilar",
+      autocorrect: 1,
+      limit: 100,
+    };
+    const data = await this.getResorce(params);
+
+    return this._transformSimilarArtists(data.similarartists.artist);
+  },
+
+  _transformArtistInfo(artist) {
+    return {
+      name: artist.name,
+      summary: artist.bio.summary,
+      tags: this._trasformTags(artist.tags.tag),
+    };
+  },
+
+  //transform  artist uas function getSimilarArtists
+  _transformSimilarArtists(similarArtists) {
+    return similarArtists.map((artist) => ({
+      name: artist.name,
+      match: this._transformMath(artist.match),
+      url: artist.url,
+    }));
   },
 
   _trasformTags() {
-      return tags.map(tag => tag.name);
+    return tags.map((tag) => tag.name);
+  },
+
+  //transform  match uas function transformSimilarArtists
+  _transformMath(match) {
+      return Math.round(parseFloat(match) * 100) + '%'
   },
 
   _convertToQueryString(params) {
     return Object.keys(params)
-      .map( key =>`${encodeURIComponent(key)} = ${encodeURIComponent(params[key])}`)
+      .map(
+        (key) =>
+          `${encodeURIComponent(key)} = ${encodeURIComponent(params[key])}`
+      )
       .join("&");
   },
-};
+};  
