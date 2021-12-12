@@ -30,6 +30,7 @@ export default {
 
 data() {
 return {
+  currentArtist: null,
   InfoArtist: {},
   SimilarArtist: []
 };
@@ -45,10 +46,44 @@ return {
 
     methods: {
  async onSearchFormSubmit(artist){
-const data = await this.$lastfmService.getSimilarArtists(artist);
-console.log(data);
-  },
+const artistMathc = await this.searchArtist(artist);
+
+if( !artistMathc || artistMathc === this.currentArtist) {
+  return;
 }
+
+this.currentArtist = artistMathc;
+
+try {
+ const [InfoArtist, SimilarArtist ] = await Promise.all([
+await this.$lastfmService.getArtistInfo(this.currentArtist),
+await this.$lastfmService.getSimilarArtists(this.currentArtist)
+
+  ]);
+
+  this.InfoArtist = InfoArtist;
+this.SimilarArtist = SimilarArtist
+
+} catch(e) {
+  consile.error(e);
+}
+},
+
+  async searchArtist(artist) {
+    try {
+      const artistMathches = await this.$lastfmService.searchArtist(artist);
+
+      if (artistMathches.length === 0) {
+        throw new Error('No matches with artist.');
+      }
+
+      const artistMathc = artistMathches.find(item => item.toLowercase() === artist.toLowercase());
+      return artistMathc ? artistMathc : artistMathches[0];
+    } catch(e) {
+console.error(e);
+    }
+  },
+},
 }
 
 

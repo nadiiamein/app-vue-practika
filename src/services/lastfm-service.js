@@ -4,7 +4,7 @@ export default {
   _apiFormat: "json",
 
   async getResorce(params) {
-    const qs = this._convertToQueryString;
+    const qs = this._convertToQueryString
     ({
       ...params,
       api_key: this._apiKey,
@@ -28,8 +28,19 @@ export default {
     const data = await this.getResorce(params);
     return this._transformArtistInfo(data.artist);
   },
+  //suchen artist nur mit namen
+  async searchArtist(artist){
+      const params = {
+          artist,
+          method: 'artist.search',
 
-  //schen anlische artists
+      };
+
+      const data = await this.getResorce(params);
+      return this._transformArtistsMatches(data.results.artistmatches.artist);
+  },
+
+  //suchen anlische artists
 
   async getSimilarArtists(artist) {
     const params = {
@@ -58,6 +69,10 @@ export default {
       match: this._transformMath(artist.match),
       url: artist.url,
     }));
+  },
+
+  _transformArtistsMatches(artistMatches) {
+      return artistMatches.map( artist => artist.name);
   },
 
   _trasformTags() {
